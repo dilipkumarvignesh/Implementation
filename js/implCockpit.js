@@ -136,28 +136,28 @@ implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,
             new THREE.MeshBasicMaterial({
                 color: 0x0000FF
             }), 0, 1);
-        /* var directionalLight = new THREE.DirectionalLight(0xff0000, 0.5);
+         var directionalLight = new THREE.DirectionalLight(0xff0000, 0.5);
          directionalLight.position.set(0, 0, 1);
 
-         // var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xff0000, 0.6 );
+          var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xff0000, 0.6 );
 
-         //     hemiLight.position.set( 0, 500, -500 );
-         //	scene.add(hemiLight);
-         //scene.add( directionalLight );*/
+             hemiLight.position.set( 0, 500, -500 );
+         	scene.add(hemiLight);
+         scene.add( directionalLight );
         box = new Physijs.BoxMesh(
 
 
             new THREE.CubeGeometry(5, 5, 5),
             boxMaterial
         );
-        /* var ambiColor = "#ff0000";
+         var ambiColor = "#ff0000";
          var ambientLight = new THREE.AmbientLight(0x000000);
-         scene.add(ambientLight);*/
+         scene.add(ambientLight);
 
-        /* var pointColor = "#ff0000";
+         var pointColor = "#ff0000";
          var pointLight = new THREE.PointLight(pointColor);
          pointLight.distance = 200;
-         scene.add(pointLight);*/
+         scene.add(pointLight);
         box.position.y = 50;
         box.position.z = -10;
         box.rotation.z = 10;
@@ -209,14 +209,14 @@ implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,
         camera.position.y = 20;
         camera.position.z = 100;
         camera.lookAt(scene.position);
-        /*
+        
             var light = new THREE.PointLight(0xff0000, 1, 100);
             light.position.set(-50, 50, -500);
             scene.add(light);
             // add subtle ambient lighting
             var ambientLight = new THREE.AmbientLight(0x0c0c0c);
             scene.add(ambientLight);
-        */
+        
         /* // add spotlight for the shadows
          var spotLight = new THREE.SpotLight(0xffffff);
          spotLight.position.set(-20, 140, 20);
@@ -235,7 +235,7 @@ implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,
          spotLight.target = plane;
          scene.add(spotLight);*/
 
-        /* var textureFlare0 = THREE.ImageUtils.loadTexture("resources/Micro.png");
+       /* var textureFlare0 = THREE.ImageUtils.loadTexture("resources/Micro.png");
          var flareColor = new THREE.Color(0xffaacc);
          var lensFlare = new THREE.LensFlare(textureFlare0, 350, 0.0, THREE.AdditiveBlending, flareColor);
          lensFlare.position.x = 10;
