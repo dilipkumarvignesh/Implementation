@@ -9,7 +9,7 @@ gameService.service('SceneService', function () {
     // Returns a single instance of a camera.  Consumed by directive and controls.
 	gameService.service('CameraService', function () {
         // default values for camera
-        var viewAngle = 45;
+        var viewAngle = 55;
         var aspectRatio = window.innerWidth / window.innerHeight;
         var near = 0.1
         var far = 1000;
@@ -18,3 +18,11 @@ gameService.service('SceneService', function () {
             perspectiveCam: new THREE.PerspectiveCamera(viewAngle, aspectRatio, near, far)
         }
     });
+
+gameService.service('ThreeDModelService',function()
+{
+return {
+	loader:new THREE.ColladaLoader()
+}
+
+})

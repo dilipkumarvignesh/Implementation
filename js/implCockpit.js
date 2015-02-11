@@ -1,6 +1,6 @@
 var implCockpit = new angular.module('implCockpit', ['ngRoute', 'gameService'])
 
-implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService, $location) {
+implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,ThreeDModelService,$location) {
     var projector = new THREE.Projector(),
         mouse_vector = new THREE.Vector3(),
         mouse = {
@@ -22,6 +22,21 @@ implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,
         Physijs.scripts.worker = 'physijs_worker.js';
         Physijs.scripts.ammo = 'ammo.js';
 
+         var loader = ThreeDModelService.loader;
+
+           loader.options.convertUpAxis = true;
+         loader.load('resources/shuttle.dae', 
+         function (collada) {
+         var dae = collada.scene;
+
+            var skin = collada.skins[0];
+
+        dae.position.set(200, 0, 0); //x,z,y- if you think in blender dimensions ;)
+        dae.scale.set(8.5, 8.5, 8.5);
+
+        scene.add(dae);
+
+        });
         // Add the camera
         CameraService.perspectiveCam.position.set(0, 20, 100);
         SceneService.scene.add(CameraService.perspectiveCam);
@@ -228,12 +243,12 @@ implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,
         spotLight.castShadow = true;
         scene.add(spotLight);*/
 
-        /* var pointColor = "#ffffff";
+         var pointColor = "#ffffff";
          var spotLight = new THREE.SpotLight(pointColor);
          spotLight.position.set(0, 0, 10);
          spotLight.castShadow = true;
          spotLight.target = plane;
-         scene.add(spotLight);*/
+         scene.add(spotLight);
 
        /* var textureFlare0 = THREE.ImageUtils.loadTexture("resources/Micro.png");
          var flareColor = new THREE.Color(0xffaacc);
