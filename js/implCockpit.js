@@ -1,6 +1,6 @@
 var implCockpit = new angular.module('implCockpit', ['ngRoute', 'gameService'])
 
-implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,ThreeDModelService,$location) {
+implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,ThreeDModelService,GameObjectService,$location) {
     var projector = new THREE.Projector(),
         mouse_vector = new THREE.Vector3(),
         mouse = {
@@ -76,14 +76,15 @@ implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,
     			cube.position.y = 0;
     			cube.position.z = 0;*/
 
-        geometry = new THREE.CubeGeometry(200, 200, 200);
+       /* geometry = new THREE.CubeGeometry(200, 200, 200);
         material = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             wireframe: true,
             wireframeLinewidth: 2
         });
 
-        mesh = new THREE.Mesh(geometry, material);
+        mesh = new THREE.Mesh(geometry, material);*/
+        mesh= GameObjectService.GameObjects.cube1;
         scene.add(mesh);
 
         mesh.position.x = 10;
@@ -98,12 +99,13 @@ implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,
         camera.lookAt(scene.position);
 
         scene.add(camera);
-
+/*
         var planeGeometry = new THREE.PlaneGeometry(580, 670, 51, 51);
         var planeMaterial = new THREE.MeshLambertMaterial({
             map: THREE.ImageUtils.loadTexture('resources/Apollo15.jpg')
         });
-        var plane = new Physijs.PlaneMesh(planeGeometry, planeMaterial);
+        var plane = new Physijs.PlaneMesh(planeGeometry, planeMaterial);*/
+        var plane= GameObjectService.GameObjects.plane;
         plane.receiveShadow = true;
 
         ground_material = Physijs.createMaterial(
@@ -342,35 +344,11 @@ implCockpit.controller('quizCtrl', function($scope) {
             }
         }, {
             "questions": {
-                "question": "Change Project can be created in which Phase",
+                "question": "Can Configuration Changes be made without any change Project in Progress",
                 "answers": [
-                    "ProductionPhase",
-                    "RealizePhase",
-                    "ChangePhase",
-                    "EvaluatePhase"
-                ],
-                "a": 2
-            }
-        }, {
-            "questions": {
-                "question": "Change Project can be created in which Phase",
-                "answers": [
-                    "ProductionPhase",
-                    "RealizePhase",
-                    "ChangePhase",
-                    "EvaluatePhase"
-                ],
-                "a": 2
-            }
-        }, {
-            "questions": {
-                "question": "Change Project can be created in which Phase",
-                "answers": [
-                    "ProductionPhase",
-                    "RealizePhase",
-                    "ChangePhase",
-                    "EvaluatePhase"
-                ],
+                    "Yes",
+                    "No",
+                    ],
                 "a": 1
             }
         }];
@@ -717,7 +695,7 @@ implCockpit.controller('orgStruct', function($scope) {
 implCockpit.controller('progressController', function($scope) {
 
     this.progress = {};
-    this.progress.status = 100;
+    this.progress.status = 80;
     /*$scope.apply(function(){
     $scope.progress=dataService.progress;
     });

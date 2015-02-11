@@ -19,10 +19,37 @@ gameService.service('SceneService', function () {
         }
     });
 
-gameService.service('ThreeDModelService',function()
-{
-return {
-	loader:new THREE.ColladaLoader()
-}
+	gameService.service('ThreeDModelService',function()
+	{
+		return {
+		loader:new THREE.ColladaLoader()
+	}
 
-})
+	});
+
+	gameService.service('GameObjectService',function()
+	{	 
+		geometry = new THREE.CubeGeometry(200, 200, 200);
+        material = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            wireframe: true,
+            wireframeLinewidth: 2
+        });
+
+        cube1 = new THREE.Mesh(geometry, material);
+
+
+        var planeGeometry = new THREE.PlaneGeometry(580, 670, 51, 51);
+        var planeMaterial = new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('resources/Apollo15.jpg')
+        });
+        var plane = new Physijs.PlaneMesh(planeGeometry, planeMaterial);
+	  return {
+	  	GameObjects:
+	  	{
+	  		cube1:cube1,
+	  		plane:plane
+	  	}
+	  }	
+	});
+

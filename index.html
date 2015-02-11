@@ -22,8 +22,9 @@
 <script type="text/javascript" src="js/implCockpit.js"></script>
 <script type="text/javascript" src="js/gameService.js"></script>
 
-
-<div id="score" ng-controller="progressController as prog">
+<div class="page-header score">
+  
+<div  ng-controller="progressController as prog">
 				<div class="progress" >
 					<div class="progress-bar" style="width: {{prog.progress.status}}%;">
 			
@@ -31,6 +32,13 @@
 					 </div>
 		
 				 </div>
+				 <div>
+				 	<button class="btn btn-primary" type="button">
+ 					 Badges <span class="badge">4</span>
+						</button>
+				</div>
+</div>
+</div>
 <div ng-view></div>
 
 </body>

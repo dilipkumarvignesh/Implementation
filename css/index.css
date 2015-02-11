@@ -2,4 +2,17 @@ body
 {
 	margin:0px;
 }
+.score.page-header
+{
+	position:fixed;
+	background:#006400;
+	margin:5px;
+	padding:5px;
 
+}
+
+#quizContainer
+{
+margin-top:20px;
+
+}
