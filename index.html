@@ -12,8 +12,22 @@
 <script src="lib/three.js"></script>
 <script src="lib/controls/FirstPersonControls.js"></script>
 <script type="text/javascript" src="lib/physi.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
+<script src="lib/jquery/jquery.js"></script>	
+<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css"></link>
+
 <script type="text/javascript" src="js/implCockpit.js"></script>
 <script type="text/javascript" src="js/gameService.js"></script>
+<div id="score" ng-controller="progressController as prog">
+				<div class="progress" >
+					<div class="progress-bar" style="width: {{prog.progress.status}}%;">
+			
+						<span class="sr-only">60% Complete</span>
+					 </div>
+		
+				 </div>
 <div ng-view></div>
 
 </body>

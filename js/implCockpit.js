@@ -284,12 +284,114 @@ animate();
 
 			});
 
-implCockpit.controller('quizCtrl',function()
-{
-alert("hi");
+implCockpit.controller('quizCtrl',function($scope){
+	{
+	$scope.showResult=false;
+	$scope.answerScore=0;
+	$scope.questions=[
+     {"questions":{
+        "question": "Current Implementation Cockpit Supports how many Change Projects",
+                "answers": [
+                    "1",
+                    "2",
+                     "10",
+                     "Multiple"
+                ],
+                "a": 0
+            }
+			},{
+			"questions":
+			{
+                "question":"Change Project can be created in which Phase",
+				"answers":[
+				"ProductionPhase",
+				"RealizePhase",
+				"ChangePhase",			
+				"EvaluatePhase"
+				],
+				"a":2
+			}},
+			{
+			"questions":
+			{
+                "question":"Implementation Cockpit Belongs to ",
+				"answers":[
+				"SFin",
+				"SPro",			
+				"SSuite",
+				"SCrm"
+				],
+				"a":2
+			}},{
+			"questions":
+			{
+                "question":"Change Project can be created in which Phase",
+				"answers":[
+				"ProductionPhase",
+				"RealizePhase",
+				"ChangePhase",			
+				"EvaluatePhase"
+				],
+				"a":2
+			}},{
+			"questions":
+			{
+                "question":"Change Project can be created in which Phase",
+				"answers":[
+				"ProductionPhase",
+				"RealizePhase",
+				"ChangePhase",			
+				"EvaluatePhase"
+				],
+				"a":2
+			}},{
+			"questions":
+			{
+                "question":"Change Project can be created in which Phase",
+				"answers":[
+				"ProductionPhase",
+				"RealizePhase",
+				"ChangePhase",			
+				"EvaluatePhase"
+				],
+				"a":1
+			}}
+			];
+			
+			$scope.setAnswer=function(question,answer)
+		{
+		if($scope.questions[question].questions.a == answer)
+		$scope.answerScore++;
+		 
+		}
+		$scope.compute=function(question)
+		{
+		$scope.showResult=true;
+		}
+	
+	}
+	
 
 });
 
+implCockpit.controller('orgStruct',function($scope){
+
+	
+});
+
+implCockpit.controller('progressController',function($scope)
+{
+
+this.progress={};
+this.progress.status=100;
+/*$scope.apply(function(){
+$scope.progress=dataService.progress;
+});
+*/
+this.setUpdate=function(){
+this.progress.status=dataService.progress;
+};
+});
 implCockpit.config(['$routeProvider',
 function($routeProvider)
 {
@@ -297,7 +399,7 @@ $routeProvider.when('/game/',{templateUrl:'partials/game.html',
 controller:'gameCtrl'}).
 when('/quiz/',{templateUrl:'partials/quiz.html',
 controller:'quizCtrl'}).
-when('/orgStruct',{templateUrl:'partials/org_struct.html',controller:'orgStruct'}).
+when('/orgStruct/',{templateUrl:'partials/org_struct.html',controller:'orgStruct'}).
 otherwise({
 redirectTo:'/'
 });

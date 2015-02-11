@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en">
+  <head>
+   
+
+    <title>Tree Example</title>
+
+    <style>
+	
+	.node {
+		cursor: pointer;
+	}
+
+	.node circle {
+	  fill: #fff;
+	  stroke: steelblue;
+	  stroke-width: 3px;
+	}
+
+	.node text {
+	  font: 12px sans-serif;
+	}
+
+	.link {
+	  fill: none;
+	  stroke: #ccc;
+	  stroke-width: 2px;
+	}
+	#addOrg
+	{
+	border:2px solid black;
+	
+	}
+	ul
+	{
+	list-style-type:none;
+	}
+	ul.liStyling li
+	{
+	padding-left:20px;
+	width:100px;
+	background:yellow;
+	cursor:pointer;
+	}
+	#my_custom_menu
+	{
+	display:none;
+	}
+	ul.liStyling li:hover
+	{
+	background:blue;
+	}
+	
+    </style>
+
+  </head>
+
+  <body>
+
+<!-- load the d3.js library -->	
+
+<script>
+
+var treeData = [
+ {
+    "name": "Suta",
+    "info": "Manager",
+    "children": [
+        {
+            "name": "ModelS",
+			"info": "Implementation Cockpit",
+			"children":[
+					{
+						"name":"UI Development",
+						"info":"Fiori Development",
+						"children":[
+								{
+									"name":"Vinay",
+									"info":"Scrum Master"
+								},
+								{
+									"name":"Dinesh",
+									"info":"Senior Developer"
+								}
+						]
+			 
+					},
+					{
+						"name":"BackEnd",
+						"info":"ABAP",
+						"children":[
+							{
+							"name":"Leon",
+							"info":"Scrum Architect"
+							},
+							{
+							"name":"Saurabh",
+							"info":"Scrum Architect"
+							}
+						]
+					}
+			
+			]
+        },
+        {
+            "name": "DC",
+			"info":"Deployment Cockpit",
+			"children":[
+								{
+									"name":"Bharat",
+									"info":"Development Specialist"
+								},
+								{
+									"name":"Nanditha",
+									"info":"Design Thinking Coach"
+								}
+						
+			 
+					
+					
+			
+			]
+        },
+        {
+            "name": "TR",
+			"info":"Task Respository",
+			"children":[
+								{
+									"name":"Muthu",
+									"info":"Scrum Architect"
+								},
+								{
+									"name":"Ishwar",
+									"info":"Scrum Architect"
+								}
+						
+			 
+					
+					
+			
+			]
+        }
+    ]
+}
+];
+
+
+// ************** Generate the tree diagram	 *****************
+var margin = {top: 20, right: 120, bottom: 20, left: 120},
+	width = 1200 - margin.right - margin.left,
+	height = 500 - margin.top - margin.bottom;
+	
+var i = 0,
+	duration = 750,
+	root;
+
+	var copy=[];
+	
+var tree = d3.layout.tree()
+	.size([height, width]);
+
+var diagonal = d3.svg.diagonal()
+	.projection(function(d) { return [d.y, d.x]; });
+
+var svg = d3.select("body").append("svg")
+	.attr("width", width + margin.right + margin.left)
+	.attr("height", height + margin.top + margin.bottom)
+  .append("g")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+root = treeData[0];
+root.x0 = height / 2;
+root.y0 = 0;
+  
+update(root);
+
+d3.select(self.frameElement).style("height", "500px");
+
+function update(source) {
+
+  // Compute the new tree layout.
+  var nodes = tree.nodes(root).reverse(),
+	  links = tree.links(nodes);
+
+  // Normalize for fixed-depth.
+  nodes.forEach(function(d) { d.y = d.depth * 180; });
+
+  // Update the nodes…
+  var node = svg.selectAll("g.node")
+	  .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+  // Enter any new nodes at the parent's previous position.
+  var nodeEnter = node.enter().append("g")
+	  .attr("class", "node")
+	  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+	  .on("click", click)
+	 .on('contextmenu',rightClick)
+	 .on('mouseover',hover)
+	 .on('mouseout',out);
+  nodeEnter.append("circle")
+	  .attr("r", 1e-6)
+	  .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+  nodeEnter.append("text")
+	  .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+	  .attr("dy", ".35em")
+	  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+	  .text(function(d) { return d.name; })
+	  .style("fill-opacity", 1e-6);
+
+  // Transition nodes to their new position.
+  var nodeUpdate = node.transition()
+	  .duration(duration)
+	  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+  nodeUpdate.select("circle")
+	  .attr("r", 10)
+	  .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+  nodeUpdate.select("text")
+	  .style("fill-opacity", 1);
+
+  // Transition exiting nodes to the parent's new position.
+  var nodeExit = node.exit().transition()
+	  .duration(duration)
+	  .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+	  .remove();
+
+  nodeExit.select("circle")
+	  .attr("r", 1e-6);
+
+  nodeExit.select("text")
+	  .style("fill-opacity", 1e-6);
+
+  // Update the links…
+  var link = svg.selectAll("path.link")
+	  .data(links, function(d) { return d.target.id; });
+
+  // Enter any new links at the parent's previous position.
+  link.enter().insert("path", "g")
+	  .attr("class", "link")
+	  .attr("d", function(d) {
+		var o = {x: source.x0, y: source.y0};
+		return diagonal({source: o, target: o});
+	  });
+
+  // Transition links to their new position.
+  link.transition()
+	  .duration(duration)
+	  .attr("d", diagonal);
+
+  // Transition exiting nodes to the parent's new position.
+  link.exit().transition()
+	  .duration(duration)
+	  .attr("d", function(d) {
+		var o = {x: source.x, y: source.y};
+		return diagonal({source: o, target: o});
+	  })
+	  .remove();
+
+  // Stash the old positions for transition.
+  nodes.forEach(function(d) {
+	d.x0 = d.x;
+	d.y0 = d.y;
+  });
+}
+function rightClick(d)
+{
+d3.event.preventDefault();
+
+var position = d3.mouse(this);
+var node= d3.select(this).attr("id");   
+d3.select('#my_custom_menu')
+  .style('position', 'absolute')
+  .style('left', position[0]+1000 + "px")
+  .style('top', position[1] +300+ "px")
+  .style('display', 'block');
+  console.log(d);
+  var data=this;
+  $('ul.liStyling').on('click', 'li', function(eve){
+    console.log(this.textContent);
+	console.log(eve);
+	if(this.textContent=="Info")
+	{
+	alert(d.info);
+	}
+	else if(this.textContent=="Close")
+	{
+	document.getElementById("my_custom_menu").style.display='none';
+	$('ul.liStyling').off();
+	}
+	else if(this.textContent=="Delete")
+	{
+	 d.children=[];
+	 update(d);
+	}
+	else if(this.textContent=="Paste")
+	{
+	var copy1=copy.children;
+	 for (var i=0;i<copy1.length;i++)
+	 {
+	 var element=copy1[i];
+	 d.children.push(element);
+	 }
+	 update(d);
+	}
+	else if(this.textContent=="Copy")
+	{
+		console.log(copy);
+		var name;
+		var info;
+	}
+	else if(this.textContent="Add")
+	{
+	
+	}
+	
+});
+//document.getElementById("my_custom_menu").addEventListener("click", displayInfo(d));
+d3.event.preventDefault();
+//document.getElementById('nodeId').value= node
+}
+function displayInfo(d)
+{
+console.log(this);
+}
+function hover(d,e)
+{
+
+//alert(d.info);
+}
+// Toggle children on click.
+function click(d) {
+  if(!d.children&&!d._children)
+  {
+  d.children=[];
+  
+  }
+  
+  var selectValue=$('#action').val();
+  if(selectValue=="none")
+  {
+  if (d.children) {
+	d._children = d.children;
+	d.children = null;
+  } else {
+	
+	d.children = d._children;
+	d._children = null;
+	
+	//d.children.append=[{"name":orgValue}];
+  }
+  update(d);
+}
+else if(selectValue=="add")
+{
+var orgValue=$('#orgValue').val();
+d.children.push({"name":orgValue});
+update(d);
+}
+else if(selectValue=="copy")
+{
+copy=(JSON.parse(JSON.stringify(d.children)));
+console.log(copy);
+}
+else if(d.children)
+{
+copy.push(d._children);
+}
+
+else if(selectValue=="paste")
+{
+d.children.push(copy);
+update(d);
+}
+else if(selectValue=="delete")
+{
+d.children=[];
+d._children=[];
+update(d);
+}
+}
+function out()
+{
+
+}
+</script>
+	<div id="AddOrg">
+	<label>Name:</label><input id="orgValue" type="text"></input>
+	<select id="action">
+	<option value="none">None</option>
+  <option value="add">Add</option>
+  <option value="copy">Copy</option>
+  <option value="delete">Delete</option>
+  <option value="paste">Paste</option>
+  
+  
+</select>
+	
+	</div>
+	
+	<div id="my_custom_menu">
+<ul class="liStyling"> 
+
+ 
+ 
+ <li>Add</li>
+ <li>Copy</li>
+ <li>Delete</li>
+ <li>Info</li>
+ <li>Close</li>
+ <li>Paste</li>
+</ul>
+</div
+  </body>
+</html>
