@@ -1,7 +1,15 @@
 var implCockpit =new angular.module('implCockpit',['ngRoute','gameService'])
 
-implCockpit.controller('gameCtrl',function($scope,CameraService,SceneService)
-{
+implCockpit.controller('gameCtrl',function($scope,CameraService,SceneService,$location)
+{var projector = new THREE.Projector(),
+        mouse_vector = new THREE.Vector3(),
+        mouse = {
+            x: 0,
+            y: 0,
+            z: 1
+        },
+        ray = new THREE.Raycaster(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0)),
+        intersects = [];
 	var renderer;
 var scene;
 var camera;
@@ -15,18 +23,23 @@ animate();
 				   Physijs.scripts.ammo = 'ammo.js';
                   
                   // Add the camera
-                  CameraService.perspectiveCam.position.set(0, 0, 0);
+                  CameraService.perspectiveCam.position.set(0, 20, 100);
                   SceneService.scene.add(CameraService.perspectiveCam);
                   
                   camera = CameraService.perspectiveCam;
                   scene = SceneService.scene;
                   // create the renderer
-                  renderer = new THREE.WebGLRenderer({ antialias: true});
+                  renderer = new THREE.WebGLRenderer({ antialias: true ,alpha:true});
                   renderer.setSize(window.innerWidth, window.innerHeight);
+                  
+                   document.addEventListener('click', onMouseClick, false);
 
                   // set up the controls with the camera and renderer
-                  controls = new THREE.FirstPersonControls(CameraService.perspectiveCam, renderer.domElement);
-
+                //  controls = new THREE.FirstPersonControls(CameraService.perspectiveCam, renderer.domElement);
+ 					clock= new THREE.Clock();
+                  	controls = new THREE.FirstPersonControls(CameraService.perspectiveCam);
+    				controls.movementSpeed = 50;
+    				controls.lookSpeed = 0.05;
                   // add renderer to DOM
                   document.getElementById("renderGame").appendChild(renderer.domElement);
 
@@ -98,7 +111,7 @@ animate();
 
     // add the plane to the scene
     scene.add(plane);
-    scene.fog = new THREE.FogExp2(0xffffff, 0.005);
+   //  scene.fog = new THREE.FogExp2(0xffffff, 0.005);
 
     // create a cube
     var cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
@@ -119,28 +132,28 @@ animate();
         new THREE.MeshBasicMaterial({
             color: 0x0000FF
         }), 0, 1);
-    var directionalLight = new THREE.DirectionalLight(0xff0000, 0.5);
+   /* var directionalLight = new THREE.DirectionalLight(0xff0000, 0.5);
     directionalLight.position.set(0, 0, 1);
 
     // var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xff0000, 0.6 );
 
     //     hemiLight.position.set( 0, 500, -500 );
     //	scene.add(hemiLight);
-    //scene.add( directionalLight );
+    //scene.add( directionalLight );*/
     box = new Physijs.BoxMesh(
 
 
         new THREE.CubeGeometry(5, 5, 5),
         boxMaterial
     );
-    var ambiColor = "#ff0000";
+   /* var ambiColor = "#ff0000";
     var ambientLight = new THREE.AmbientLight(0x000000);
-    scene.add(ambientLight);
+    scene.add(ambientLight);*/
 
-    var pointColor = "#ff0000";
+   /* var pointColor = "#ff0000";
     var pointLight = new THREE.PointLight(pointColor);
     pointLight.distance = 200;
-    scene.add(pointLight);
+    scene.add(pointLight);*/
     box.position.y = 50;
     box.position.z = -10;
     box.rotation.z = 10;
@@ -192,51 +205,90 @@ animate();
     camera.position.y = 20;
     camera.position.z = 100;
     camera.lookAt(scene.position);
-
+/*
     var light = new THREE.PointLight(0xff0000, 1, 100);
     light.position.set(-50, 50, -500);
     scene.add(light);
     // add subtle ambient lighting
     var ambientLight = new THREE.AmbientLight(0x0c0c0c);
     scene.add(ambientLight);
-
-    // add spotlight for the shadows
+*/
+   /* // add spotlight for the shadows
     var spotLight = new THREE.SpotLight(0xffffff);
     spotLight.position.set(-20, 140, 20);
     spotLight.castShadow = true;
-    scene.add(spotLight);
+    scene.add(spotLight);*/
 
-    var spotLight1 = new THREE.SpotLight(0xffff00);
+    /*var spotLight1 = new THREE.SpotLight(0xffff00);
     spotLight.position.set(-20, 140, 20);
     spotLight.castShadow = true;
-    scene.add(spotLight);
+    scene.add(spotLight);*/
 
-    var pointColor = "#ffffff";
+   /* var pointColor = "#ffffff";
     var spotLight = new THREE.SpotLight(pointColor);
     spotLight.position.set(0, 0, 10);
     spotLight.castShadow = true;
     spotLight.target = plane;
-    scene.add(spotLight);
+    scene.add(spotLight);*/
 
-    var textureFlare0 = THREE.ImageUtils.loadTexture("resources/Micro.png");
+   /* var textureFlare0 = THREE.ImageUtils.loadTexture("resources/Micro.png");
     var flareColor = new THREE.Color(0xffaacc);
     var lensFlare = new THREE.LensFlare(textureFlare0, 350, 0.0, THREE.AdditiveBlending, flareColor);
     lensFlare.position.x = 10;
     lensFlare.position.y = 10;
     lensFlare.position.z = 100;
-    scene.add(lensFlare);
+    scene.add(lensFlare);*/
               }
 
               function animate() {
-              	
+              		scene.simulate();
               	  requestAnimationFrame(animate);
                   renderer.render(SceneService.scene, CameraService.perspectiveCam);
-                  controls.update();
+                 controls.update(clock.getDelta());
                   
               }
 
+               function onMouseClick(evt) {
+     	   console.log("hi");
+        console.log(evt);
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+
+        mouse_vector.set(mouse.x, mouse.y, mouse.z);
+		
+		cancelAnimationFrame(animate);
+		
+			
+        //the final step of the transformation process, basically this method call
+        //creates a point in 3d space where the mouse click occurd
+        projector.unprojectVector(mouse_vector, camera);
+
+        var direction = mouse_vector.sub(camera.position).normalize();
+
+        //ray = new THREE.Raycaster( camera.position, direction );
+        ray.set(camera.position, direction);
+        intersects = ray.intersectObjects(scene.children);
+
+        for (var i = 0; i < intersects.length; i++) {
+            if (intersects[i].object) {
+                if (intersects[i].object.name == "change") {
+                  //  alert("change Project selected")
+                 	$location.path("/quiz/");
+                 	$scope.$apply();	   
+
+                }	
+            }
+        }
+    }
+
 
 			});
+
+implCockpit.controller('quizCtrl',function()
+{
+alert("hi");
+
+});
 
 implCockpit.config(['$routeProvider',
 function($routeProvider)
@@ -247,7 +299,7 @@ when('/quiz/',{templateUrl:'partials/quiz.html',
 controller:'quizCtrl'}).
 when('/orgStruct',{templateUrl:'partials/org_struct.html',controller:'orgStruct'}).
 otherwise({
-redirectTo:'/game/'
+redirectTo:'/'
 });
 
 }]);
