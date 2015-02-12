@@ -306,7 +306,7 @@ implCockpit.controller('gameCtrl', function($scope, CameraService, SceneService,
 });
 
 implCockpit.controller('quizCtrl', function($scope) {
-    {
+    
         $scope.showResult = false;
         $scope.answerScore = 0;
         $scope.questions = [{
@@ -360,11 +360,13 @@ implCockpit.controller('quizCtrl', function($scope) {
         }
         $scope.compute = function(question) {
             $scope.showResult = true;
+
         }
 
-    }
-
-
+        $scope.hideAlert = function(question) {
+            $(".alert").alert('close');
+        }
+        
 });
 
 implCockpit.controller('orgStruct', function($scope) {
