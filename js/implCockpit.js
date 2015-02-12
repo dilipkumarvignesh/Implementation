@@ -704,7 +704,20 @@ implCockpit.controller('progressController', function($scope) {
     */
     this.setUpdate = function() {
         this.progress.status = dataService.progress;
+
     };
+       var badges_Won= "BadgesWon"+":0";
+      $scope.popover=function(eve){
+
+
+
+        console.log(eve);
+        $('[data-toggle="popover"]').popover({
+        placement : 'bottom',
+        content : badges_Won
+    });
+       
+    }
 });
 implCockpit.config(['$routeProvider',
     function($routeProvider) {
