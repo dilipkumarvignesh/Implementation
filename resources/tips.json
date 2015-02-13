@@ -1,10 +1,19 @@
 [
      {
-        
-            "tip":"Try to create a new change Project"           
-    },
-            {
-                "tip":"Go to Org Structure to do your configuration"    
-    		}
+         "tip":"Try creating a new change Project"           
+     },
+     {
+          "tip":"Go to Org Structure to do your configuration"    
+     },
+     {
+          "tip":"Check About App to Know more about System"
+     },
+     {
+          "tip":"The Space ship helps in changing the phase."
+
+     }
+     {
+          "tip":"Configuration cannot be done without creating a new change project"
+     }
 
 ]
